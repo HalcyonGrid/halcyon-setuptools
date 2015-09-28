@@ -13,7 +13,7 @@ namespace hc_database
     /// </summary>
     public class SqlFileRunner
     {
-        private string[] _commands;
+        private List<string> _commands = new List<string>();
         private MySqlConnection _conn;
 
         /// <summary>
@@ -33,15 +33,55 @@ namespace hc_database
             //filter commented lines
             foreach (var line in lines)
             {
-                if (! line.StartsWith("--"))
+                if (! line.StartsWith("--") && !String.IsNullOrWhiteSpace(line))
                 {
                     filteredLines.Add(line);
                 }
             }
 
-            //join and then split by semicolon which should be one statement
-            string joined = String.Join("", filteredLines);
-            _commands = joined.Split(new char[] { ';' });
+            //parse the file looking for semicolons or delimiter statements
+            string delim = ";";
+            char[] delimCharArray = delim.ToCharArray();
+            StringBuilder commandSoFar = new StringBuilder();
+
+            foreach (var line in filteredLines)
+            {
+                if (line.StartsWith("DELIMITER "))
+                {
+                    delim = line.Split(' ')[1];
+                    delimCharArray = delim.ToCharArray();
+                    continue;
+                }
+
+                for (int i = 0; i < line.Length; i++)
+                {
+                    if (line[i] == delim[0])
+                    {
+                        if (i + delim.Length - 1 < line.Length && 
+                            line.ToCharArray(i, delim.Length).SequenceEqual(delimCharArray))
+                        {
+                            //we hit a delimiter
+                            _commands.Add(commandSoFar.ToString());
+                            commandSoFar.Clear();
+                        }
+                        else
+                        {
+                            commandSoFar.Append(line[i]);
+                        }
+                    }
+                    else
+                    {
+                        commandSoFar.Append(line[i]);
+                    }
+                }
+
+                commandSoFar.Append("\n");
+            }
+
+            if (commandSoFar.Length > 0 && !String.IsNullOrWhiteSpace(commandSoFar.ToString()))
+            {
+                _commands.Add(commandSoFar.ToString());
+            }
         }
 
         /// <summary>
@@ -49,10 +89,15 @@ namespace hc_database
         /// </summary>
         public void Run()
         {
-            foreach (var command in _commands)
+            for (int i = 0; i < _commands.Count; i++)
             {
+                if (String.IsNullOrWhiteSpace(_commands[i]))
+                {
+                    continue;
+                }
+
                 var cmd = _conn.CreateCommand();
-                cmd.CommandText = command;
+                cmd.CommandText = _commands[i];
 
                 try
                 {
@@ -60,8 +105,13 @@ namespace hc_database
                 }
                 catch (MySqlException e)
                 {
-                    throw new Exception(String.Format("Error {0}\nWhile executing query {1}", 
-                        e.Message, command), e);
+                    string prevCommand = String.Empty;
+                    string nextCommand = String.Empty;
+                    if (i > 0) prevCommand = _commands[i - 1];
+                    if (i+1 < _commands.Count) nextCommand = _commands[i + 1];
+
+                    throw new Exception(String.Format("Error {0}\nWhile executing query {1}\n\nContext:\n{2}\n{3}\n{4}", 
+                        e.Message, _commands[i], prevCommand, _commands[i], nextCommand), e);
                 }
                 
             }

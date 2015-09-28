@@ -313,18 +313,6 @@ CREATE TABLE `classifieds` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Temporary view structure for view `duped_folders`
---
-
-DROP TABLE IF EXISTS `duped_folders`;
-/*!50001 DROP VIEW IF EXISTS `duped_folders`*/;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-/*!50001 CREATE VIEW `duped_folders` AS SELECT
- 1 AS `folderid`*/;
-SET character_set_client = @saved_cs_client;
-
---
 -- Table structure for table `economy_totals`
 --
 
@@ -356,7 +344,7 @@ CREATE TABLE `economy_transaction` (
   PRIMARY KEY (`id`),
   KEY `IDX_destination` (`destAvatarID`),
   KEY `IDX_source` (`sourceAvatarID`)
-) ENGINE=InnoDB AUTO_INCREMENT=97527515 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
