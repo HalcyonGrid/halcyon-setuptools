@@ -27,7 +27,7 @@ namespace hc_database
         static private OptionSet options = new OptionSet()
         {
             { "init",           "Initializes a new halcyon database",               v => op = DatabaseOperation.Init },
-            { "upgrade",        "Upgrades halcyon database",                        v => op = DatabaseOperation.Upgrade },
+            { "upgrade",        "Upgrades a halcyon database",                      v => op = DatabaseOperation.Upgrade },
             { "t|type=",        "Specifies the halcyon database type (core, rdb)",  v => dbType = v.ToLower() },
             { "h|host=",        "Specifies the database hostname",                  v => dbHost = v },
             { "u|user=",        "Specifies the database username",                  v => dbUser = v },
@@ -60,6 +60,7 @@ namespace hc_database
 
         private static void PrintUsage()
         {
+            Console.WriteLine();
             Console.WriteLine("Options:");
             options.WriteOptionDescriptions(Console.Out);
         }
