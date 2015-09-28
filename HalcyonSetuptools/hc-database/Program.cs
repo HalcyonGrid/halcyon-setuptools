@@ -138,7 +138,7 @@ namespace hc_database
 
             try
             {
-                SqlFileRunner rdbRunner = new SqlFileRunner(conn, dbSchema, RDB_DEFAULT_SCHEMA_NAME);
+                SqlFileRunner rdbRunner = new SqlFileRunner(conn, dbSchema, RDB_SCHEMA_BASE_FILE);
                 rdbRunner.Run();
             }
             catch (Exception e)
