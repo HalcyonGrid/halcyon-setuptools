@@ -76,21 +76,29 @@ namespace hc_database
             switch (dbType)
             {
                 case "core":
-                    return DoInitCore();
+                case "rdb":
+                    return DoInitRun();
             }
 
             Console.Error.WriteLine("Unknown database type: " + dbType);
             return 1;
         }
 
-        private static int DoInitCore()
+        private static int DoInitRun()
         {
             if (String.IsNullOrEmpty(dbSchema))
             {
-                dbSchema = CORE_DEFAULT_SCHEMA_NAME;
+                if (dbType == "core")
+                {
+                    dbSchema = CORE_DEFAULT_SCHEMA_NAME;
+                }
+                else if (dbType == "rdb")
+                {
+                    dbSchema = RDB_DEFAULT_SCHEMA_NAME;
+                }
             }
 
-            if (! VerifyDatabaseParameters())
+            if (!VerifyDatabaseParameters())
             {
                 PrintUsage();
                 return 1;
@@ -126,27 +134,34 @@ namespace hc_database
             //for the core database, we'll actually open up and run both the 
             //core file and the RDB file. that way, a user can run both from
             //the same database
-            try
+            if (dbType == "core")
             {
-                SqlFileRunner coreRunner = new SqlFileRunner(conn, dbSchema, CORE_SCHEMA_BASE_FILE);
-                coreRunner.Run();
+                try
+                {
+                    SqlFileRunner coreRunner = new SqlFileRunner(conn, dbSchema, CORE_SCHEMA_BASE_FILE);
+                    coreRunner.Run();
+                }
+                catch (Exception e)
+                {
+                    Console.Error.WriteLine("Unable to load CORE schema: {0}", e.Message);
+                    return 1;
+                }
             }
-            catch (Exception e)
+            
+            if (dbType == "core" || dbType == "rdb")
             {
-                Console.Error.WriteLine("Unable to load CORE schema: {0}", e.Message);
-                return 1;
+                try
+                {
+                    SqlFileRunner rdbRunner = new SqlFileRunner(conn, dbSchema, RDB_SCHEMA_BASE_FILE);
+                    rdbRunner.Run();
+                }
+                catch (Exception e)
+                {
+                    Console.Error.WriteLine("Unable to load RDB schema: {0}", e.Message);
+                    return 1;
+                }
             }
-
-            try
-            {
-                SqlFileRunner rdbRunner = new SqlFileRunner(conn, dbSchema, RDB_SCHEMA_BASE_FILE);
-                rdbRunner.Run();
-            }
-            catch (Exception e)
-            {
-                Console.Error.WriteLine("Unable to load RDB schema: {0}", e.Message);
-                return 1;
-            }
+            
 
             return 0;
         }
