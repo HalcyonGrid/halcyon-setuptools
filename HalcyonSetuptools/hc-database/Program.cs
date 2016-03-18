@@ -1,55 +1,54 @@
 ﻿using System;
 using NDesk.Options;
-using System.Collections.Generic;
 using MySql.Data.MySqlClient;
 
 namespace hc_database
 {
     class Program
     {
-        private static bool help = false;
-        private static DatabaseOperation op;
+        private static bool _help;
+        private static DatabaseOperation _op;
 
-        private static string dbType;
+        private static string _dbType;
 
-        private static string dbHost;
-        private static string dbUser;
-        private static string dbPass;
-        private static string dbSchema;
+        private static string _dbHost;
+        private static string _dbUser;
+        private static string _dbPass;
+        private static string _dbSchema;
 
-        private const string CORE_DEFAULT_SCHEMA_NAME = "inworldz";
-        private const string RDB_DEFAULT_SCHEMA_NAME = "inworldz_rdb";
+        private const string CoreDefaultSchemaName = "inworldz";
+        private const string RdbDefaultSchemaName = "inworldz_rdb";
 
-        private const string CORE_SCHEMA_BASE_FILE = "inworldz-core-base.sql";
-        private const string RDB_SCHEMA_BASE_FILE = "inworldz-rdb-base.sql";
+        private const string CoreSchemaBaseFile = "inworldz-core-base.sql";
+        private const string RdbSchemaBaseFile = "inworldz-rdb-base.sql";
 
 
-        private static OptionSet options = new OptionSet()
+        private static OptionSet _options = new OptionSet()
         {
-            { "init",           "Initializes a new halcyon database",               v => op = DatabaseOperation.Init },
-            { "upgrade",        "Upgrades a halcyon database",                      v => op = DatabaseOperation.Upgrade },
-            { "t|type=",        "Specifies the halcyon database type (core, rdb)",  v => dbType = v.ToLower() },
-            { "h|host=",        "Specifies the database hostname",                  v => dbHost = v },
-            { "u|user=",        "Specifies the database username",                  v => dbUser = v },
-            { "p|password=",    "Specifies the database password",                  v => dbPass = v },
-            { "s|schema=",      "Specifies the name of the database schema",        v => dbSchema = v },
-            { "?|help",         "Prints this help message",                         v => help = v != null },
+            { "init",           "Initializes a new halcyon database",               v => _op = DatabaseOperation.Init },
+            { "upgrade",        "Upgrades a halcyon database",                      v => _op = DatabaseOperation.Upgrade },
+            { "t|type=",        "Specifies the halcyon database type (core, rdb)",  v => _dbType = v.ToLower() },
+            { "h|host=",        "Specifies the database hostname",                  v => _dbHost = v },
+            { "u|user=",        "Specifies the database username",                  v => _dbUser = v },
+            { "p|password=",    "Specifies the database password",                  v => _dbPass = v },
+            { "s|schema=",      "Specifies the name of the database schema",        v => _dbSchema = v },
+            { "?|help",         "Prints this help message",                         v => _help = v != null },
         };
 
         static int Main(string[] args)
         {
-            List<string> extra = options.Parse(args);
+            _options.Parse(args);
 
-            if (help || op == DatabaseOperation.None)
+            if (_help || _op == DatabaseOperation.None)
             {
                 PrintUsage();
                 return 1;
             }
 
             //allow blank passwords
-            if (dbPass == null) dbPass = String.Empty;
+            if (_dbPass == null) _dbPass = String.Empty;
 
-            switch (op)
+            switch (_op)
             {
                 case DatabaseOperation.Init:
                     return DoInit();
@@ -62,39 +61,39 @@ namespace hc_database
         {
             Console.WriteLine();
             Console.WriteLine("Options:");
-            options.WriteOptionDescriptions(Console.Out);
+            _options.WriteOptionDescriptions(Console.Out);
         }
 
         private static int DoInit()
         {
-            if (String.IsNullOrEmpty(dbType))
+            if (String.IsNullOrEmpty(_dbType))
             {
                 PrintUsage();
                 return 1;
             }
 
-            switch (dbType)
+            switch (_dbType)
             {
                 case "core":
                 case "rdb":
                     return DoInitRun();
             }
 
-            Console.Error.WriteLine("Unknown database type: " + dbType);
+            Console.Error.WriteLine("Unknown database type: " + _dbType);
             return 1;
         }
 
         private static int DoInitRun()
         {
-            if (String.IsNullOrEmpty(dbSchema))
+            if (String.IsNullOrEmpty(_dbSchema))
             {
-                if (dbType == "core")
+                if (_dbType == "core")
                 {
-                    dbSchema = CORE_DEFAULT_SCHEMA_NAME;
+                    _dbSchema = CoreDefaultSchemaName;
                 }
-                else if (dbType == "rdb")
+                else if (_dbType == "rdb")
                 {
-                    dbSchema = RDB_DEFAULT_SCHEMA_NAME;
+                    _dbSchema = RdbDefaultSchemaName;
                 }
             }
 
@@ -106,7 +105,7 @@ namespace hc_database
 
             MySqlConnection conn = new MySqlConnection(
                 String.Format("Data Source={0};User ID={1};password={2}",
-                dbHost, dbUser, dbPass));
+                _dbHost, _dbUser, _dbPass));
 
             try
             {
@@ -122,7 +121,7 @@ namespace hc_database
             try
             {
                 MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = String.Format("CREATE DATABASE IF NOT EXISTS {0};", dbSchema);
+                cmd.CommandText = String.Format("CREATE DATABASE IF NOT EXISTS {0};", _dbSchema);
                 cmd.ExecuteNonQuery();
             }
             catch (MySqlException e)
@@ -134,11 +133,11 @@ namespace hc_database
             //for the core database, we'll actually open up and run both the 
             //core file and the RDB file. that way, a user can run both from
             //the same database
-            if (dbType == "core")
+            if (_dbType == "core")
             {
                 try
                 {
-                    SqlFileRunner coreRunner = new SqlFileRunner(conn, dbSchema, CORE_SCHEMA_BASE_FILE);
+                    SqlFileRunner coreRunner = new SqlFileRunner(conn, _dbSchema, CoreSchemaBaseFile);
                     coreRunner.Run();
                 }
                 catch (Exception e)
@@ -148,11 +147,11 @@ namespace hc_database
                 }
             }
             
-            if (dbType == "core" || dbType == "rdb")
+            if (_dbType == "core" || _dbType == "rdb")
             {
                 try
                 {
-                    SqlFileRunner rdbRunner = new SqlFileRunner(conn, dbSchema, RDB_SCHEMA_BASE_FILE);
+                    SqlFileRunner rdbRunner = new SqlFileRunner(conn, _dbSchema, RdbSchemaBaseFile);
                     rdbRunner.Run();
                 }
                 catch (Exception e)
@@ -172,8 +171,8 @@ namespace hc_database
         /// <returns>True if parameters are filled, false if not</returns>
         private static bool VerifyDatabaseParameters()
         {
-            if (String.IsNullOrEmpty(dbHost) || String.IsNullOrEmpty(dbUser) 
-                || String.IsNullOrEmpty(dbSchema))
+            if (String.IsNullOrEmpty(_dbHost) || String.IsNullOrEmpty(_dbUser) 
+                || String.IsNullOrEmpty(_dbSchema))
             {
                 return false;
             }
