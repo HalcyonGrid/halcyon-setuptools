@@ -355,8 +355,8 @@ CREATE TABLE `economy_transaction` (
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = '' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50003 TRIGGER `inworldz`.`upd_total_on_new_trans`
-AFTER INSERT ON `inworldz`.`economy_transaction`
+/*!50003 CREATE*/ /*!50003 TRIGGER `upd_total_on_new_trans`
+AFTER INSERT ON `economy_transaction`
 FOR EACH ROW
 BEGIN
   IF (SELECT COUNT(*) FROM economy_totals WHERE user_id = NEW.destAvatarId) = 0 THEN

@@ -7,15 +7,15 @@ namespace hc_database
 {
     class Program
     {
-        static private bool help = false;
-        static private DatabaseOperation op;
+        private static bool help = false;
+        private static DatabaseOperation op;
 
-        static private string dbType;
+        private static string dbType;
 
-        static private string dbHost;
-        static private string dbUser;
-        static private string dbPass;
-        static private string dbSchema;
+        private static string dbHost;
+        private static string dbUser;
+        private static string dbPass;
+        private static string dbSchema;
 
         private const string CORE_DEFAULT_SCHEMA_NAME = "inworldz";
         private const string RDB_DEFAULT_SCHEMA_NAME = "inworldz_rdb";
@@ -24,7 +24,7 @@ namespace hc_database
         private const string RDB_SCHEMA_BASE_FILE = "inworldz-rdb-base.sql";
 
 
-        static private OptionSet options = new OptionSet()
+        private static OptionSet options = new OptionSet()
         {
             { "init",           "Initializes a new halcyon database",               v => op = DatabaseOperation.Init },
             { "upgrade",        "Upgrades a halcyon database",                      v => op = DatabaseOperation.Upgrade },
