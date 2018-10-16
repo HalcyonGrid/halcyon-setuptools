@@ -119,26 +119,6 @@ CREATE TABLE `agents` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `allparcels`
---
-
-DROP TABLE IF EXISTS `allparcels`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `allparcels` (
-  `regionUUID` varchar(255) NOT NULL,
-  `parcelname` varchar(255) NOT NULL,
-  `ownerUUID` char(36) NOT NULL DEFAULT '00000000-0000-0000-0000-000000000000',
-  `groupUUID` char(36) NOT NULL DEFAULT '00000000-0000-0000-0000-000000000000',
-  `landingpoint` varchar(255) NOT NULL,
-  `parcelUUID` char(36) NOT NULL DEFAULT '00000000-0000-0000-0000-000000000000',
-  `infoUUID` char(36) NOT NULL DEFAULT '00000000-0000-0000-0000-000000000000',
-  `parcelarea` int(11) unsigned NOT NULL,
-  PRIMARY KEY (`parcelUUID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
 -- Table structure for table `avatarappearance`
 --
 
@@ -854,33 +834,6 @@ CREATE TABLE `osrole` (
   `Title` varchar(255) NOT NULL,
   `Powers` bigint(20) unsigned NOT NULL,
   PRIMARY KEY (`GroupID`,`RoleID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `parcels`
---
-
-DROP TABLE IF EXISTS `parcels`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `parcels` (
-  `regionUUID` varchar(255) NOT NULL,
-  `parcelname` varchar(255) NOT NULL,
-  `parcelUUID` varchar(255) NOT NULL,
-  `landingpoint` varchar(255) NOT NULL,
-  `description` varchar(255) NOT NULL,
-  `searchcategory` varchar(50) NOT NULL,
-  `build` enum('true','false') NOT NULL,
-  `script` enum('true','false') NOT NULL,
-  `public` enum('true','false') NOT NULL,
-  `dwell` float NOT NULL DEFAULT '0',
-  `infouuid` varchar(255) NOT NULL DEFAULT '',
-  PRIMARY KEY (`regionUUID`,`parcelUUID`),
-  KEY `name` (`parcelname`),
-  KEY `description` (`description`),
-  KEY `searchcategory` (`searchcategory`),
-  KEY `dwell` (`dwell`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
