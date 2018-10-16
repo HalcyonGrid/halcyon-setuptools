@@ -16,22 +16,22 @@ namespace hc_database
         private static string _dbPass;
         private static string _dbSchema;
 
-        private const string CoreDefaultSchemaName = "inworldz";
-        private const string RdbDefaultSchemaName = "inworldz_rdb";
+        private const string CoreDefaultSchemaName = "halcyon";
+        private const string RdbDefaultSchemaName = "halcyon_rdb";
 
-        private const string CoreSchemaBaseFile = "inworldz-core-base.sql";
-        private const string RdbSchemaBaseFile = "inworldz-rdb-base.sql";
+        private const string CoreSchemaBaseFile = "halcyon-core-base.sql";
+        private const string RdbSchemaBaseFile = "halcyon-rdb-base.sql";
 
 
         private static OptionSet _options = new OptionSet()
         {
             { "init",           "Initializes a new halcyon database",               v => _op = DatabaseOperation.Init },
-            { "upgrade",        "Upgrades a halcyon database",                      v => _op = DatabaseOperation.Upgrade },
-            { "t|type=",        "Specifies the halcyon database type (core, rdb)",  v => _dbType = v.ToLower() },
+            // { "upgrade",        "Upgrades a halcyon database",                      v => _op = DatabaseOperation.Upgrade },
+            { "t|type=",        "Specifies the halcyon database type (core, rdb, both)",  v => _dbType = v.ToLower() },
             { "h|host=",        "Specifies the database hostname",                  v => _dbHost = v },
             { "u|user=",        "Specifies the database username",                  v => _dbUser = v },
             { "p|password=",    "Specifies the database password",                  v => _dbPass = v },
-            { "s|schema=",      "Specifies the name of the database schema",        v => _dbSchema = v },
+            { "s|schema=",      "Specifies the name of the database schema",      v => _dbSchema = v },
             { "?|help",         "Prints this help message",                         v => _help = v != null },
         };
 
@@ -76,6 +76,7 @@ namespace hc_database
             {
                 case "core":
                 case "rdb":
+                case "both":
                     return DoInitRun();
             }
 
@@ -87,7 +88,7 @@ namespace hc_database
         {
             if (String.IsNullOrEmpty(_dbSchema))
             {
-                if (_dbType == "core")
+                if ((_dbType == "core") || (_dbType == "both"))
                 {
                     _dbSchema = CoreDefaultSchemaName;
                 }
@@ -130,10 +131,7 @@ namespace hc_database
                 return 1;
             }
 
-            //for the core database, we'll actually open up and run both the 
-            //core file and the RDB file. that way, a user can run both from
-            //the same database
-            if (_dbType == "core")
+            if ((_dbType == "core") || (_dbType == "both"))
             {
                 try
                 {
@@ -147,7 +145,7 @@ namespace hc_database
                 }
             }
             
-            if (_dbType == "core" || _dbType == "rdb")
+            if (_dbType == "rdb" || _dbType == "both")
             {
                 try
                 {
