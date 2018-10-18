@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>HC-Database</id>
+    <version>$version$</version>
+    <title>Halcyon Simulator Database Configuration Utility</title>
+    <authors>David Daeschler, Ricky Curtice</authors>
+    <owners>Ricky Curtice</owners>
+    <licenseUrl>https://github.com/HalcyonGrid/halcyon-setuptools/blob/master/LICENSE</licenseUrl>
+    <projectUrl>https://github.com/HalcyonGrid/halcyon-setuptools</projectUrl>
+    <description>HC-Database is a tool to install the needed schemas in the database for running a Halcyon-based virtual world. Ships with the needed SQL files.</description>
+    <copyright>Copyright 2018</copyright>
+    <tags>halcyon mysql database setup</tags>
+    <releaseNotes>See https://github.com/HalcyonGrid/halcyon-setuptools/releases for release notes.</releaseNotes>
+  </metadata>
+</package>
