@@ -4,11 +4,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 14.0.23107.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "hc-database", "hc-database\hc-database.csproj", "{16ECD34E-7D8F-488F-9EB8-72326A899F23}"
-	ProjectSection(ProjectDependencies) = postProject
-		{74268FBB-4EA3-479E-A9CB-F94287920B79} = {74268FBB-4EA3-479E-A9CB-F94287920B79}
-	EndProjectSection
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NDesk.Options", "NDesk.Options\NDesk.Options.csproj", "{74268FBB-4EA3-479E-A9CB-F94287920B79}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -22,10 +17,6 @@ Global
 		{16ECD34E-7D8F-488F-9EB8-72326A899F23}.Debug|x64.Build.0 = Debug|x64
 		{16ECD34E-7D8F-488F-9EB8-72326A899F23}.Release|x64.ActiveCfg = Release|x64
 		{16ECD34E-7D8F-488F-9EB8-72326A899F23}.Release|x64.Build.0 = Release|x64
-		{74268FBB-4EA3-479E-A9CB-F94287920B79}.Debug|x64.ActiveCfg = Debug|x64
-		{74268FBB-4EA3-479E-A9CB-F94287920B79}.Debug|x64.Build.0 = Debug|x64
-		{74268FBB-4EA3-479E-A9CB-F94287920B79}.Release|x64.ActiveCfg = Release|x64
-		{74268FBB-4EA3-479E-A9CB-F94287920B79}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
