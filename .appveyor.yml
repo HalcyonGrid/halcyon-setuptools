@@ -27,7 +27,7 @@ skip_commits:
   - LICENSE
 
 cache:
-- HalcyonSetuptools\packages -> **\packages.config
+- packages -> **\packages.config
 - '%LocalAppData%\NuGet\Cache'
 
 assembly_info:
@@ -43,11 +43,10 @@ before_build:
     } else {
       $env:EDITION = "dotnet"
     }
-- cd HalcyonSetuptools
 - nuget restore HalcyonSetuptools.sln
 
 build:
-  project: HalcyonSetuptools\HalcyonSetuptools.sln
+  project: HalcyonSetuptools.sln
   parallel: true
   verbosity: minimal
   publish_nuget: false
