@@ -19,8 +19,8 @@ namespace hc_database
         private const string CoreDefaultSchemaName = "halcyon";
         private const string RdbDefaultSchemaName = "halcyon_rdb";
 
-        private const string CoreSchemaBaseFile = "halcyon-core-base.sql";
-        private const string RdbSchemaBaseFile = "halcyon-rdb-base.sql";
+        private const string CoreSchemaBaseFile = "sql/halcyon-core-base.sql";
+        private const string RdbSchemaBaseFile = "sql/halcyon-rdb-base.sql";
 
 
         private static OptionSet _options = new OptionSet()
